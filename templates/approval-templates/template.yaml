@@ -1,0 +1,38 @@
+apiVersion: backstage.io/v1alpha1
+kind: Template
+metadata:
+  name: servicenow-ticket-form
+  title: ServiceNow Ticket Request
+  description: Trigger a Harness pipeline with ServiceNow integration
+spec:
+  owner: dev-team
+  type: service
+  parameters:
+    - title: Request Info
+      required:
+        - requester
+        - changeType
+        - description
+      properties:
+        requester:
+          type: string
+          title: Requester Name
+        changeType:
+          type: string
+          title: Change Type
+          enum: [Standard, Normal, Emergency]
+        description:
+          type: string
+          title: Description of the change
+  steps:
+    - id: triggerPipeline
+      name: Trigger Harness Pipeline
+      action: harness:triggerPipeline
+      input:
+        org: default
+        project: my-project
+        pipeline: servicenow-pipeline
+        inputSet:
+          requester: \${{ parameters.requester }}
+          changeType: \${{ parameters.changeType }}
+          description: \${{ parameters.description }}
