@@ -1,4 +1,4 @@
-apiVersion: backstage.io/v1alpha1
+apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: servicenow-ticket-form
@@ -7,6 +7,7 @@ metadata:
 spec:
   owner: dev-team
   type: service
+
   parameters:
     - title: Request Info
       required:
@@ -24,6 +25,7 @@ spec:
         description:
           type: string
           title: Description of the change
+
   steps:
     - id: triggerPipeline
       name: Trigger Harness Pipeline
@@ -33,6 +35,11 @@ spec:
         project: my-project
         pipeline: servicenow-pipeline
         inputSet:
-          requester: \${{ parameters.requester }}
-          changeType: \${{ parameters.changeType }}
-          description: \${{ parameters.description }}
+          requester: ${{ parameters.requester }}
+          changeType: ${{ parameters.changeType }}
+          description: ${{ parameters.description }}
+
+  output:
+    text:
+      - title: "Pipeline Triggered"
+        content: "The Harness pipeline for ServiceNow request has been triggered."
