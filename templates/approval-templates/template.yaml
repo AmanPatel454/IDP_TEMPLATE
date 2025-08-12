@@ -39,6 +39,7 @@ spec:
           requester: ${{ parameters.requester }}
           changeType: ${{ parameters.changeType }}
           description: ${{ parameters.description }}
+        forwardAuth: false
 
   output:
     text:
