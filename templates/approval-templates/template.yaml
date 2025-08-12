@@ -1,8 +1,8 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: servicenow-ticket-form-v2
-  title: ServiceNow Ticket Request-v2
+  name: servicenow-ticket-form-v3
+  title: ServiceNow Ticket Request-v3
   description: Trigger a Harness pipeline via webhook with ServiceNow integration
 spec:
   owner: dev-team
