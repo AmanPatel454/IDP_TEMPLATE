@@ -1,9 +1,9 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: servicenow-ticket-form
-  title: ServiceNow Ticket Request
-  description: Trigger a Harness pipeline with ServiceNow integration
+  name: servicenow-ticket-form/v2
+  title: ServiceNow Ticket Request/v2
+  description: Trigger a Harness pipeline via webhook with ServiceNow integration
 spec:
   owner: dev-team
   type: service
@@ -28,13 +28,14 @@ spec:
 
   steps:
     - id: triggerPipeline
-      name: Trigger Harness Pipeline
-      action: harness:triggerPipeline
+      name: Trigger Harness Pipeline via Webhook
+      action: fetch:plain
       input:
-        org: default
-        project: my-project
-        pipeline: servicenow-pipeline
-        inputSet:
+        url: "https://app.harness.io/gateway/pipeline/api/webhook/custom/v2?accountIdentifier=etUzqvIyRSixpOWJqF4_Qg&orgIdentifier=GDDT&projectIdentifier=EDA&pipelineIdentifier=IDP_FORM_TEST&triggerIdentifier=IDP_FORM_TEST"
+        method: POST
+        headers:
+          Content-Type: application/json
+        body:
           requester: ${{ parameters.requester }}
           changeType: ${{ parameters.changeType }}
           description: ${{ parameters.description }}
@@ -42,4 +43,4 @@ spec:
   output:
     text:
       - title: "Pipeline Triggered"
-        content: "The Harness pipeline for ServiceNow request has been triggered."
+        content: "The Harness pipeline for ServiceNow request has been triggered via webhook."
