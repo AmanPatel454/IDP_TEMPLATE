@@ -39,6 +39,7 @@ spec:
           title: Harness API Key
           type: string
           ui:widget: password
+          ui:field: HarnessAuthToken
           description: API key to authenticate with Harness
 
   steps:
