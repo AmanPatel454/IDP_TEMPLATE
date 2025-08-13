@@ -44,7 +44,7 @@ spec:
   steps:
     - id: execute-pipeline
       name: Trigger Harness Pipeline
-      action: harness:triggerPipeline
+      action: harness:harness-custom-pipeline
       input:
         url: https://app.harness.io/ng/account/etUzqvIyRSixpOWJqF4_Qg/all/orgs/GDDT/projects/EDA/pipelines/IDP_FORM_TEST/pipeline-studio/?storeType=INLINE
         apikey: ${{ parameters.token }}
