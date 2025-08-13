@@ -42,13 +42,11 @@ spec:
           description: API key to authenticate with Harness
 
   steps:
-    - id: triggerPipeline
+    - id: execute-pipeline
       name: Trigger Harness Pipeline
       action: harness:triggerPipeline
       input:
-        org: default
-        project: my-project
-        pipeline: servicenow-pipeline
+        url: https://app.harness.io/ng/account/etUzqvIyRSixpOWJqF4_Qg/all/orgs/GDDT/projects/EDA/pipelines/IDP_FORM_TEST/pipeline-studio/?storeType=INLINE
         apikey: ${{ parameters.token }}
         inputSet:
           requester: ${{ parameters.requester }}
@@ -56,6 +54,5 @@ spec:
           description: ${{ parameters.description }}
 
   output:
-    links:
-      - title: "View Pipeline in Harness"
-        url: "https://app.harness.io/ng/account/<accountId>/cd/orgs/default/projects/my-project/pipelines/servicenow-pipeline"
+    resultLink: ${{ steps.execute-pipeline.output.resultLink }}
+
