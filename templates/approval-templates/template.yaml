@@ -47,7 +47,7 @@ spec:
       name: Trigger Harness Pipeline
       action: trigger:harness-custom-pipeline
       input:
-        url: https://app.harness.io/gateway/pipeline/api/webhook/custom/v2?accountIdentifier=etUzqvIyRSixpOWJqF4_Qg&orgIdentifier=GDDT&projectIdentifier=EDA&pipelineIdentifier=IDP_FORM_TEST&triggerIdentifier=IDP_FORM_TEST
+        url: https://app.harness.io/ng/account/etUzqvIyRSixpOWJqF4_Qg/all/orgs/GDDT/projects/EDA/pipelines/IDP_FORM_TEST/pipeline-studio/?storeType=INLINE
         apikey: ${{ parameters.token }}
         inputset:
           requester: ${{ parameters.requester }}
