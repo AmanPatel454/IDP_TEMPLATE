@@ -1,9 +1,12 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: servicenow-ticket-form-v3
-  title: ServiceNow Ticket Request-v3
-  description: Trigger a Harness pipeline via webhook with ServiceNow integration
+  name: servicenow-ticket-form
+  title: ServiceNow Ticket Request
+  description: Trigger a Harness pipeline with ServiceNow integration
+  tags:
+    - servicenow
+    - harness
 spec:
   owner: dev-team
   type: service
@@ -14,34 +17,45 @@ spec:
         - requester
         - changeType
         - description
+        - token
       properties:
         requester:
           type: string
           title: Requester Name
+          description: Name of the person requesting the change
         changeType:
           type: string
           title: Change Type
-          enum: [Standard, Normal, Emergency]
+          enum:
+            - Standard
+            - Normal
+            - Emergency
+          description: Type of change request
         description:
           type: string
-          title: Description of the change
+          title: Description of the Change
+          description: Provide a short description of the requested change
+        token:
+          title: Harness API Key
+          type: string
+          ui:widget: password
+          description: API key to authenticate with Harness
 
   steps:
     - id: triggerPipeline
-      name: Trigger Harness Pipeline via Webhook
-      action: fetch:plain
+      name: Trigger Harness Pipeline
+      action: harness:triggerPipeline
       input:
-        url: "https://app.harness.io/gateway/pipeline/api/webhook/custom/v2?accountIdentifier=etUzqvIyRSixpOWJqF4_Qg&orgIdentifier=GDDT&projectIdentifier=EDA&pipelineIdentifier=IDP_FORM_TEST&triggerIdentifier=IDP_FORM_TEST"
-        method: POST
-        headers:
-          Content-Type: application/json
-        body:
+        org: default
+        project: my-project
+        pipeline: servicenow-pipeline
+        apikey: ${{ parameters.token }}
+        inputSet:
           requester: ${{ parameters.requester }}
           changeType: ${{ parameters.changeType }}
           description: ${{ parameters.description }}
-        forwardAuth: false
 
   output:
-    text:
-      - title: "Pipeline Triggered"
-        content: "The Harness pipeline for ServiceNow request has been triggered via webhook."
+    links:
+      - title: "View Pipeline in Harness"
+        url: "https://app.harness.io/ng/account/<accountId>/cd/orgs/default/projects/my-project/pipelines/servicenow-pipeline"
