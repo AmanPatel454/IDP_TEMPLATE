@@ -1,0 +1,60 @@
+
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: idmc.migrations.automation
+  title: idmc.migrations.automation
+  description: A form to provide inputs to trigger the IDMC CICD Automation pipeline.
+  tags:
+    - harness
+    - pipeline
+spec:
+  type: service
+  owner: EDA
+  parameters:
+    - title: Pipeline Trigger Details
+      required:
+        - region
+        - source
+        - target
+        - folderName
+        - token
+      properties:
+        region:
+          title: Region
+          type: string
+          description: "The cloud region (Eg. US, EU or JP)."
+        source:
+          title: Source Environment
+          type: string
+          description: "The source env (Eg. Dev or Test)."
+        target:
+          title: Target Environment
+          type: string
+          description: "The target env (Eg. Test or Prod)."
+        folderName:
+          title: Project Name
+          type: string
+          description: "The name of the Projet to be migrated."
+        token:
+          title: Harness Token
+          type: string
+          ui:widget: password
+          ui:field: HarnessAuthToken
+          description: "Harness API key to authenticate the trigger action."
+ 
+  steps:
+    - id: execute-pipeline
+      name: Execute Harness Pipeline
+      action: trigger:harness-custom-pipeline
+      input:
+        url: https://app.harness.io/ng/account/etUzqvIyRSixpOWJqF4_Qg/all/orgs/GDDT/projects/EDA/pipelines/Demo_IDMC_CICD_Automation/pipeline-studio/?storeType=INLINE
+        inputset:
+          region: ${{ parameters.region }}
+          source: ${{ parameters.source }}
+          target: ${{ parameters.target }}
+          folderName: ${{ parameters.folderName }}
+        apikey: ${{ parameters.token }}
+ 
+  output:
+    resultLink: ${{ steps.execute-pipeline.output.resultLink }}

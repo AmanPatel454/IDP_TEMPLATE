@@ -1,0 +1,119 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: idmc-migration-form
+  title: IDMC Migration Request
+  description: Trigger a Harness pipeline for IDMC migration
+  tags:
+    - idmc
+    - harness
+    - migration
+spec:
+  owner: data-eng-team
+  type: service
+
+  parameters:
+    - title: Migration Details
+      required:
+        - applicationName
+        - apmsId
+        - edbId
+        - region
+        - sourceEnv
+        - targetEnv
+        - migrationType
+        - token
+      properties:
+        applicationName:
+          type: string
+          title: Application Name
+          default: AMER_CICD_Harness
+        apmsId:
+          type: string
+          title: APMS ID
+          default: "10612"
+        edbId:
+          type: string
+          title: EDB ID
+          default: "ABC123"
+        region:
+          type: string
+          title: Region
+          default: US
+        sourceEnv:
+          type: string
+          title: Source Environment
+          default: DEV
+        targetEnv:
+          type: string
+          title: Target Environment
+          default: TEST
+        migrationType:
+          type: string
+          title: Migration Type
+          enum:
+            - Full
+            - Selective
+          default: Full
+        assets:
+          type: array
+          title: Name of Assets
+          description: If Migration Type is "Full", this will be auto-set to All.  
+                       If "Selective", provide one or more asset paths.
+          items:
+            type: string
+          ui:options:
+            addable: true
+            orderable: true
+            removable: true
+          default:
+            - "All"
+        token:
+          title: Harness API Key
+          type: string
+          ui:widget: password
+          ui:field: HarnessAuthToken
+          description: API key to authenticate with Harness
+
+  ui:conditional:
+    - if:
+        properties:
+          migrationType: Full
+      then:
+        properties:
+          assets:
+            type: array
+            default:
+              - "All"
+            readOnly: true
+    - if:
+        properties:
+          migrationType: Selective
+      then:
+        properties:
+          assets:
+            type: array
+            items:
+              type: string
+            description: Provide multiple asset paths
+
+  steps:
+    - id: execute-pipeline
+      name: Trigger Harness Pipeline
+      action: trigger:harness-custom-pipeline
+      input:
+        url: https://app.harness.io/ng/account/etUzqvIyRSixpOWJqF4_Qg/all/orgs/GDDT/projects/EDA/pipelines/IDP_FORM_TEST_Clone/pipeline-studio/?storeType=INLINE
+        apikey: ${{ parameters.token }}
+        inputset:
+          applicationName: ${{ parameters.applicationName }}
+          apmsId: ${{ parameters.apmsId }}
+          edbId: ${{ parameters.edbId }}
+          region: ${{ parameters.region }}
+          sourceEnv: ${{ parameters.sourceEnv }}
+          targetEnv: ${{ parameters.targetEnv }}
+          migrationType: ${{ parameters.migrationType }}
+          assets: ${{ parameters.assets }}
+
+  output:
+    resultLink: ${{ steps.execute-pipeline.output.resultLink }}
+
