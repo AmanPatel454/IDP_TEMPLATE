@@ -1,17 +1,16 @@
-apiVersion: scaffolder.backstage.io/v1beta3
-kind: Template
+apiVersion: harness.io/v1
+kind: Workflow
+type: service
+identifier: idmc_migration_form
+name: IDMC Migration Request
+owner: data-eng-team
 metadata:
-  name: idmc-migration-form
-  title: IDMC Migration Request
   description: Trigger a Harness pipeline for IDMC migration
   tags:
     - idmc
     - harness
     - migration
 spec:
-  owner: data-eng-team
-  type: service
-
   parameters:
     - title: Migration Details
       required:
@@ -58,8 +57,7 @@ spec:
         assets:
           type: array
           title: Name of Assets
-          description: If Migration Type is "Full", this will be auto-set to All.  
-                       If "Selective", provide one or more asset paths.
+          description: If Migration Type is "Full", this will be auto-set to All. If "Selective", provide one or more asset paths.
           items:
             type: string
           ui:options:
@@ -74,7 +72,7 @@ spec:
           ui:widget: password
           ui:field: HarnessAuthToken
           description: API key to authenticate with Harness
-
+ 
   ui:conditional:
     - if:
         properties:
@@ -96,7 +94,7 @@ spec:
             items:
               type: string
             description: Provide multiple asset paths
-
+ 
   steps:
     - id: execute-pipeline
       name: Trigger Harness Pipeline
@@ -113,7 +111,8 @@ spec:
           targetEnv: ${{ parameters.targetEnv }}
           migrationType: ${{ parameters.migrationType }}
           assets: ${{ parameters.assets }}
-
+ 
   output:
-    resultLink: ${{ steps.execute-pipeline.output.resultLink }}
-
+    links:
+      - title: Pipeline Details
+        url: ${{ steps.execute-pipeline.output.resultLink }}
