@@ -3,6 +3,8 @@ kind: Workflow
 type: service
 identifier: idmc_migration_form
 name: IDMC Migration Request
+projectIdentifier: EDA     # ← Based on your pipeline URL
+orgIdentifier: GDDT        # ← Based on your pipeline URL
 owner: data-eng-team
 metadata:
   description: Trigger a Harness pipeline for IDMC migration
