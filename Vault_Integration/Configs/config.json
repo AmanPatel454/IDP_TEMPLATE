@@ -1,0 +1,14 @@
+{
+  "environment": "dev",
+  "region": "us",
+  "dev_environment_role_arn": "arn:aws:iam::263789222982:role/ODPE_Data_Platform_Launchpad_Cross_Account_Role",
+  "tst_environment_role_arn": "arn:aws:iam::881018545998:role/ODPE_Data_Platform_Launchpad_Cross_Account_Role",
+  "prd_environment_role_arn": "arn:aws:iam::432372222409:role/ODPE_Data_Platform_Launchpad_Cross_Account_Role",
+  "URL_KEY": "https://vault-usvga-prd-primary-private-vault-aba33721.858bf6b9.z1.hashicorp.cloud:8200/",
+  "NAMESPACE_KEY": "admin/ODPE",
+  "ROLE_ID_KEY": "78933220-b26e-6282-e8e4-8fea29908c6f",
+  "SECRET_ID_KEY": "838e349b-9e74-c46a-cff6-87c349319d0c",
+  "TST_SECRET_ENGINE": "kv-test",
+  "PRD_SECRET_ENGINE": "kv-prd",
+  "DEV_SECRET_ENGINE": "kv-dev"
+}
