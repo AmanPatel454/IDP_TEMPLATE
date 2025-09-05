@@ -206,42 +206,35 @@ def migrate_all_files(
 #         print("\n📊 Migration Summary:")
 #         print(result)
 
-def main():
-    # Read Harness pipeline variables
-    migration_type = os.getenv("MIGRATION_TYPE", "").lower()   # "all" or "selective"
-    source_bucket = os.getenv("SOURCE_BUCKET")
-    dest_bucket = os.getenv("DEST_BUCKET")
-    source_env = os.getenv("SOURCE_ENV", "dev")
-    target_env = os.getenv("TARGET_ENV", "tst")
-    region = os.getenv("REGION", "us")
-
+def main(
+    migration_type,
+    source_bucket,
+    dest_bucket,
+    source_env,
+    target_env,
+    region,
+    migration_folder=None,
+    migration_files=None
+):
     source_s3_client = get_s3_client(source_env, region)
     dest_s3_client = get_s3_client(target_env, region)
 
-    if migration_type == "all":
-        # Expect a pipeline variable MIGRATION_FOLDER
-        folder_prefix = os.getenv("MIGRATION_FOLDER")
-        if not folder_prefix:
-            print("❌ Error: MIGRATION_FOLDER variable is required for 'all' migration")
-            sys.exit(1)
-
-        print(f"🚀 Running FULL migration for folder: {folder_prefix}")
+    if migration_type.lower() == "all":
+        if not migration_folder:
+            raise Exception("MIGRATION_FOLDER is required for 'all' migration")
+        print(f"🚀 Running FULL migration for folder: {migration_folder}")
         result = migrate_all_files(
             source_bucket,
             dest_bucket,
-            folder_prefix,
+            migration_folder,
             source_s3_client,
             dest_s3_client
         )
 
-    elif migration_type == "selective":
-        # Expect MIGRATION_FILES as comma-separated list
-        files_input = os.getenv("MIGRATION_FILES", "")
-        if not files_input:
-            print("❌ Error: MIGRATION_FILES variable is required for 'selective' migration")
-            sys.exit(1)
-
-        file_list = [f.strip() for f in files_input.split(",") if f.strip()]
+    elif migration_type.lower() == "selective":
+        if not migration_files:
+            raise Exception("MIGRATION_FILES is required for 'selective' migration")
+        file_list = [f.strip() for f in migration_files.split(",") if f.strip()]
         print(f"🚀 Running SELECTIVE migration for {len(file_list)} files")
         result = migrate_selected_files(
             source_bucket,
@@ -252,11 +245,11 @@ def main():
         )
 
     else:
-        print(f"❌ Error: Unknown MIGRATION_TYPE '{migration_type}'. Must be 'all' or 'selective'.")
-        sys.exit(1)
+        raise Exception(f"Unknown MIGRATION_TYPE: {migration_type}")
 
     print("\n📊 Migration Summary:")
     print(result)
+
 
 
 if __name__ == "__main__":
