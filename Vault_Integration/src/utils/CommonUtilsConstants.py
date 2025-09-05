@@ -199,38 +199,6 @@ BACKEND_IDMC_METADATA_TABLE_COLUMNS = [
     "provision_start_dt"
 ]
 
-KMS_AIRFLOW_POLICY = {
-    "Version": "2012-10-17",
-    "Id": "key-default-1",
-    "Statement": [
-        {
-            "Sid": "Enable IAM User Permissions",
-            "Effect": "Allow",
-            "Principal": {"AWS": "arn:aws:iam::account_id:root"},
-            "Action": "kms:*",
-            "Resource": "*",
-        },
-        {
-            "Sid": "Allow logs access",
-            "Effect": "Allow",
-            "Principal": {"Service": "logs.region.amazonaws.com"},
-            "Action": [
-                "kms:Encrypt*",
-                "kms:Decrypt*",
-                "kms:ReEncrypt*",
-                "kms:GenerateDataKey*",
-                "kms:Describe*",
-            ],
-            "Resource": "*",
-            "Condition": {
-                "ArnLike": {
-                    "kms:EncryptionContext:aws:logs:arn": "arn:aws:logs:region:account_id:*"
-                }
-            },
-        },
-    ],
-}
-
 APPLICATION = "application"
 IDMC_KEY = "idmc"
 IDMC_ADMIN_PREVELIGES = "admin_privileges"
