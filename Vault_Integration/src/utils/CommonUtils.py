@@ -157,21 +157,21 @@ def get_boto3_client(resource: str, environment: str, region: str):
         raise Exception(f"ERROR::Unable to create boto3 client: {str(ex)}")
 
 
-def get_current_environment() -> str:
-    """Get current environment from config"""
-    try:
-        config = get_config()
-        print("Fetching current environment")
-        return config[CommonUtilsConstants.ENVIRONMENT_KEY]
-    except Exception as ex:
-        raise Exception(f"ERROR::Unable to fetch current environment: {str(ex)}")
+# def get_current_environment() -> str:
+#     """Get current environment from config"""
+#     try:
+#         config = get_config()
+#         print("Fetching current environment")
+#         return config[CommonUtilsConstants.ENVIRONMENT_KEY]
+#     except Exception as ex:
+#         raise Exception(f"ERROR::Unable to fetch current environment: {str(ex)}")
 
 
-def get_current_region() -> str:
-    """Get current region from config"""
-    try:
-        config = get_config()
-        print("Fetching current region")
-        return config[CommonUtilsConstants.REGION_KEY]
-    except Exception as ex:
-        raise Exception(f"ERROR::Unable to fetch current region: {str(ex)}")
+# def get_current_region() -> str:
+#     """Get current region from config"""
+#     try:
+#         config = get_config()
+#         print("Fetching current region")
+#         return config[CommonUtilsConstants.REGION_KEY]
+#     except Exception as ex:
+#         raise Exception(f"ERROR::Unable to fetch current region: {str(ex)}")
