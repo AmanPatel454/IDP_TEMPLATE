@@ -218,18 +218,18 @@ def main(
             dest_s3_client
         )
 
-    elif migration_type.lower() == "selective":
-        if not migration_files:
-            raise Exception("MIGRATION_FILES is required for 'selective' migration")
-        file_list = [f.strip() for f in migration_files.split(",") if f.strip()]
-        print(f"🚀 Running SELECTIVE migration for {len(file_list)} files")
-        result = migrate_selected_files(
-            source_bucket,
-            dest_bucket,
-            file_list,
-            source_s3_client,
-            dest_s3_client
-        )
+    # elif migration_type.lower() == "selective":
+    #     if not migration_files:
+    #         raise Exception("MIGRATION_FILES is required for 'selective' migration")
+    #     file_list = [f.strip() for f in migration_files.split(",") if f.strip()]
+    #     print(f"🚀 Running SELECTIVE migration for {len(file_list)} files")
+    #     result = migrate_selected_files(
+    #         source_bucket,
+    #         dest_bucket,
+    #         file_list,
+    #         source_s3_client,
+    #         dest_s3_client
+    #     )
 
     else:
         raise Exception(f"Unknown MIGRATION_TYPE: {migration_type}")
