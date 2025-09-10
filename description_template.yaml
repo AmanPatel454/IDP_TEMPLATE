@@ -20,11 +20,14 @@ spec:
         assets:
           type: array
           title: Name of Assets
-          items:
-            type: string
-            const: All
           default:
           - All
+          items:
+            type: string
+          ui:options:
+            addable: false
+            orderable: false
+            removable: false
           readOnly: true
   - if:
       properties:
