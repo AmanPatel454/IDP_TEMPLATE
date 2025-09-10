@@ -20,6 +20,9 @@ spec:
         assets:
           type: array
           title: Name of Assets
+          items:
+            type: string
+            const: All
           default:
           - All
           readOnly: true
