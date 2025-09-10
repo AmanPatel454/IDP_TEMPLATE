@@ -110,7 +110,7 @@ spec:
         migrationType: ${{ parameters.migrationType }}
         assets: ${{ parameters.assets }}
 metadata:
-  description: Trigger a Harness pipeline for IDMC migration
+  description: Trigger a Harness pipeline for IDMC migration setup
   tags:
   - idmc
   - harness
