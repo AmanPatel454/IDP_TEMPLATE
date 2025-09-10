@@ -19,15 +19,8 @@ spec:
       properties:
         assets:
           type: array
-          title: Name of Assets
           default:
           - All
-          items:
-            type: string
-          ui:options:
-            addable: false
-            orderable: false
-            removable: false
           readOnly: true
   - if:
       properties:
@@ -36,14 +29,9 @@ spec:
       properties:
         assets:
           type: array
-          title: Name of Assets
-          description: Provide one or more asset paths
           items:
             type: string
-          ui:options:
-            addable: true
-            orderable: true
-            removable: true
+          description: Provide multiple asset paths
   parameters:
   - title: Migration Details
     required:
@@ -87,6 +75,19 @@ spec:
         - Full
         - Selective
         default: Full
+      assets:
+        type: array
+        title: Name of Assets
+        description: If Migration Type is "Full", this will be auto-set to All. If
+          "Selective", provide one or more asset paths.
+        items:
+          type: string
+        ui:options:
+          addable: true
+          orderable: true
+          removable: true
+        default:
+        - All
       token:
         title: Harness API Key
         type: string
@@ -110,7 +111,7 @@ spec:
         migrationType: ${{ parameters.migrationType }}
         assets: ${{ parameters.assets }}
 metadata:
-  description: Trigger a Harness pipeline for IDMC migration setup
+  description: Trigger a Harness pipeline for IDMC migration
   tags:
   - idmc
   - harness
