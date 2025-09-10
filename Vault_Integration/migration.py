@@ -52,6 +52,8 @@ import boto3
 from typing import List, Dict, Any
 
 
+from typing import Dict, Any, List
+
 def prefix_exists(bucket: str, prefix: str, s3_client) -> bool:
     """
     Check if a prefix (folder path) exists in the given bucket.
@@ -70,85 +72,44 @@ def ensure_subfolders(bucket: str, prefix: str, s3_client):
     return prefix
 
 
-def migrate_selected_files(
-    source_bucket: str,
-    dest_bucket: str,
-    file_list: List[str],
-    source_s3_client,
-    dest_s3_client
-) -> Dict[str, Any]:
-    """
-    Migrate a list of specific files using provided clients.
-    Ensures that required destination subfolders exist.
-    """
-    try:
-        print(f"📄 Migrating {len(file_list)} selected files")
-        
-        migrated_count = 0
-        errors = []
-        
-        for file_key in file_list:
-            try:
-                print(f"  Migrating: {file_key}")
-                
-                # ---- Ensure destination subfolders exist ----
-                prefix = "/".join(file_key.split("/")[:-1]) + "/"
-                if prefix != "/":  # only ensure if not root
-                    ensure_subfolders(dest_bucket, prefix, dest_s3_client)
-
-                # Get file from source
-                source_object = source_s3_client.get_object(Bucket=source_bucket, Key=file_key)
-
-                # Upload to destination
-                dest_s3_client.put_object(
-                    Bucket=dest_bucket,
-                    Key=file_key,
-                    Body=source_object['Body'].read()
-                )
-                migrated_count += 1
-                
-            except Exception as e:
-                error_msg = f"Failed to migrate '{file_key}': {e}"
-                print(f"❌ {error_msg}")
-                errors.append(error_msg)
-        
-        print(f"✅ Selected files: {migrated_count}/{len(file_list)} migrated")
-        
-        return {
-            "status": "SUCCESS" if not errors else "PARTIAL_SUCCESS",
-            "migrated_count": migrated_count,
-            "total_requested": len(file_list),
-            "errors": errors
-        }
-        
-    except Exception as e:
-        raise Exception(f"ERROR::Critical error in selected files migration: {e}")
-
-
 def migrate_all_files(
     source_bucket: str,
     dest_bucket: str,
-    folder_prefix: str,
+    folder_name: str,
     source_s3_client,
     dest_s3_client
 ) -> Dict[str, Any]:
     """
-    Migrate all files under a given folder prefix.
-    If folder does not exist in destination, it will be created.
-    The folder structure will be preserved.
+    Migrate a folder and its files from source to destination bucket.
+    Checks both root and IICS/ prefix for the folder.
+    Preserves folder structure in the target bucket.
     """
     try:
-        print(f"📂 Starting migration for all files under prefix: {folder_prefix}")
+        # Try root folder first
+        root_prefix = f"{folder_name}/"
+        iics_prefix = f"IICS/{folder_name}/"
 
-        # Ensure prefix ends with "/"
-        if not folder_prefix.endswith("/"):
-            folder_prefix = folder_prefix + "/"
+        # Decide which prefix exists
+        if prefix_exists(source_bucket, root_prefix, source_s3_client):
+            folder_prefix = root_prefix
+        elif prefix_exists(source_bucket, iics_prefix, source_s3_client):
+            folder_prefix = iics_prefix
+        else:
+            print(f"⚠️ Folder '{folder_name}' not found in bucket {source_bucket}")
+            return {
+                "status": "NO_FILES",
+                "migrated_count": 0,
+                "total_requested": 0,
+                "errors": [f"Folder '{folder_name}' not found in source bucket"]
+            }
 
-        # List all objects in the given prefix
+        print(f"📂 Starting migration for folder: {folder_prefix}")
+
+        # List all objects in the chosen prefix
         paginator = source_s3_client.get_paginator("list_objects_v2")
         page_iterator = paginator.paginate(Bucket=source_bucket, Prefix=folder_prefix)
 
-        file_keys = []
+        file_keys: List[str] = []
         for page in page_iterator:
             if "Contents" in page:
                 for obj in page["Contents"]:
@@ -165,20 +126,46 @@ def migrate_all_files(
 
         print(f"📄 Found {len(file_keys)} files under {folder_prefix}")
 
-        # Call migrate_selected_files to handle migration
-        result = migrate_selected_files(
-            source_bucket,
-            dest_bucket,
-            file_keys,
-            source_s3_client,
-            dest_s3_client
-        )
+        migrated_count = 0
+        errors = []
 
-        print(f"✅ Migration completed for prefix: {folder_prefix}")
-        return result
+        for file_key in file_keys:
+            try:
+                print(f"  Migrating: {file_key}")
+
+                # Ensure subfolders exist in destination
+                prefix = "/".join(file_key.split("/")[:-1]) + "/"
+                if prefix != "/":
+                    ensure_subfolders(dest_bucket, prefix, dest_s3_client)
+
+                # Fetch file from source
+                source_object = source_s3_client.get_object(Bucket=source_bucket, Key=file_key)
+
+                # Upload to destination with same key
+                dest_s3_client.put_object(
+                    Bucket=dest_bucket,
+                    Key=file_key,
+                    Body=source_object["Body"].read()
+                )
+                migrated_count += 1
+
+            except Exception as e:
+                error_msg = f"Failed to migrate '{file_key}': {e}"
+                print(f"❌ {error_msg}")
+                errors.append(error_msg)
+
+        print(f"✅ Migration completed: {migrated_count}/{len(file_keys)} files migrated")
+
+        return {
+            "status": "SUCCESS" if not errors else "PARTIAL_SUCCESS",
+            "migrated_count": migrated_count,
+            "total_requested": len(file_keys),
+            "errors": errors
+        }
 
     except Exception as e:
         raise Exception(f"ERROR::Critical error in migrate_all_files: {e}")
+
 
 
 # def main():
