@@ -195,8 +195,6 @@ def migrate_all_files(
 
 def main(
     migration_type,
-    source_bucket,
-    dest_bucket,
     source_env,
     target_env,
     region,
