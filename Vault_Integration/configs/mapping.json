@@ -1,0 +1,90 @@
+{
+  "agent_mapping":
+  {
+    "USVGAIICSD001":
+    {
+      "Test": "USVGAIICST002",
+      "Prod": "USVGAIICSP001",
+      "Dev_Bucket": "tpc-aws-ted-dev-edpp-bdm-mount-us-east-1",
+      "Test_Bucket": "trg :tpc-aws-ted-qa-edpp-bdm-mount-us-east-1",
+      "Prod_Bucket": "tpc-aws-ted-prd-edpp-bdm-mount-us-east-1"
+    },
+    "defraiicsd001":
+    {
+      "Test": "defraiicst001",
+      "Prod": "defraiicsp001",
+      "Dev_Bucket": "tpc-aws-ted-dev-edpp-bdm-mount-eu-central-1",
+      "Test_Bucket": "tpc-aws-ted-qa-edpp-iics-bdm-mount-eu-central-1",
+      "Prod_Bucket": "tpc-aws-ted-prd-edpp-bdm-mount-eu-central-1"
+    },
+    "EDB-US":
+    {
+      "Test": "EDB-US",
+      "Prod": "EDB-US",
+      "Dev_Bucket": "ttpc-aws-ted-dev-iics-edpp-mount-usvga",
+      "Test_Bucket": "tpc-aws-ted-tst-iics-edpp-mount-usvga",
+      "Prod_Bucket": "tpc-aws-ted-prd-iics-edpp-mount-usvga"
+    },
+    "EDB-EU":
+    {
+      "Test": "EDB-EU",
+      "Prod": "EDB-EU",
+      "Dev_Bucket": "tpc-aws-ted-dev-iics-edpp-mount-defra",
+      "Test_Bucket": "tpc-aws-ted-tst-iics-edpp-mount-defra",
+      "Prod_Bucket": "tpc-aws-ted-prd-iics-edpp-mount-defra"
+    },
+    "EDB-JP":
+    {
+      "Test": "EDB-JP",
+      "Prod": "EDB-JP",
+      "Dev_Bucket": "tpc-aws-ted-dev-iics-edpp-mount-jptyo",
+      "Test_Bucket": "tpc-aws-ted-tst-iics-edpp-mount-jptyo",
+      "Prod_Bucket": "tpc-aws-ted-prd-iics-edpp-mount-jptyo"
+    },
+    "USVGASMVITJD001":
+    {
+      "Test": "USVGASMVITJT001",
+      "Prod": "USVGASMVITJP001",
+      "Dev_Bucket": "",
+      "Test_Bucket": "",
+      "Prod_Bucket": ""
+    },
+    "DEFRASMVITJD001":
+    {
+      "Test": "DEFRASMVITJT001",
+      "Prod": "DEFRASMVITJP001",
+      "Dev_Bucket": "",
+      "Test_Bucket": "",
+      "Prod_Bucket": ""
+    },
+    "JPTKXICSD001":
+    {
+      "Test": "JPTKXICST001",
+      "Prod": "JPTKXICSP001",
+      "Dev_Bucket": "",
+      "Test_Bucket": "",
+      "Prod_Bucket": ""
+    },
+    "JPTYOIICSWD002":
+    {
+      "Test": "JPTYOIICSWT001",
+      "Prod": "JPTYOIICSWP001",
+      "Dev_Bucket": "",
+      "Test_Bucket": "",
+      "Prod_Bucket": ""
+    },
+    "USVGAIICST002":
+    {
+      "Dev_Bucket": "tpc-aws-ted-qa-edpp-bdm-mount-us-east-1",
+      "Test_Bucket": "tpc-aws-ted-qa-edpp-bdm-mount-us-east-1",
+      "Prod_Bucket": " tpc-aws-ted-prd-edpp-bdm-mount-us-east-1"
+    },
+    "defraiicst001":
+    {
+      "Dev_Bucket": "tpc-aws-ted-qa-edpp-iics-bdm-mount-eu-central-1",
+      "Test_Bucket": "tpc-aws-ted-qa-edpp-iics-bdm-mount-eu-central-1",
+      "Prod_Bucket": "tpc-aws-ted-prd-edpp-bdm-mount-eu-central-1"
+    }
+  }
+}
+ 

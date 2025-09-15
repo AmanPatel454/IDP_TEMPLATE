@@ -10,6 +10,7 @@ Pre_requisites: Requires CommonUtilsConstants.py and config.json
 
 import boto3
 import hvac
+import re
 from typing import Dict, Any, Tuple, Union
 
 # Import constants
@@ -24,6 +25,13 @@ def get_config() -> Dict[str, Any]:
     except Exception as e:
         raise Exception(f"ERROR::Unable to fetch configs: {str(e)}")
 
+def get_mapping_config() -> Dict[str, Any]:
+    """Load and return configuration from JSON file"""
+    try:
+        with open(CommonUtilsConstants.MAPPING_CONFIG_FILE_PATH) as config_file:
+            return CommonUtilsConstants.json.load(config_file)
+    except Exception as e:
+        raise Exception(f"ERROR::Unable to fetch configs: {str(e)}")
 
 def client_auth():
     """Authenticate vault client using AppRole"""
@@ -157,21 +165,25 @@ def get_boto3_client(resource: str, environment: str, region: str):
         raise Exception(f"ERROR::Unable to create boto3 client: {str(ex)}")
 
 
-# def get_current_environment() -> str:
-#     """Get current environment from config"""
-#     try:
-#         config = get_config()
-#         print("Fetching current environment")
-#         return config[CommonUtilsConstants.ENVIRONMENT_KEY]
-#     except Exception as ex:
-#         raise Exception(f"ERROR::Unable to fetch current environment: {str(ex)}")
+def get_buckets(agent_name, env):
+    """
+    Returns (source_bucket, dest_bucket) based on environment.
+    """
+    
+    mapping = CommonUtils.get_mapping_config()
+    run_env = re.search(r"\{\s*'([^']+)'", agent_name)
 
+    agent_info = mapping["agent_mapping"].get(agent_name)
+    if not agent_info:
+        raise ValueError(f"No agent found for {agent_name}")
 
-# def get_current_region() -> str:
-#     """Get current region from config"""
-#     try:
-#         config = get_config()
-#         print("Fetching current region")
-#         return config[CommonUtilsConstants.REGION_KEY]
-#     except Exception as ex:
-#         raise Exception(f"ERROR::Unable to fetch current region: {str(ex)}")
+    if env.lower() == "dev":
+        source_bucket = agent_info.get("Dev_Bucket")
+        dest_bucket = agent_info.get("Test_Bucket")
+    elif env.lower() == "test":
+        source_bucket = agent_info.get("Test_Bucket")
+        dest_bucket = agent_info.get("Prod_Bucket")
+    else:
+        raise ValueError("env must be 'dev' or 'test'")
+
+    return source_bucket, dest_bucket

@@ -213,11 +213,14 @@ def main(
     source_env,
     target_env,
     region,
+    runtime_env,
     migration_folder=None,
     migration_files=None
 ):
     source_s3_client = get_s3_client(source_env, region)
     dest_s3_client = get_s3_client(target_env, region)
+
+    source_bucket,dest_bucket = get_buckets(runtime_env, source_env)
 
     if migration_type.lower() == "all":
         if not migration_folder:
