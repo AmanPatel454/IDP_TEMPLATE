@@ -11,7 +11,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 from databricks import sql
 
-from backend_metadata import Constants
+from utils import Constants
 from utils.CommonUtils import get_config, read_secret, get_current_environment
 from utils import CommonUtilsConstants
 from utils import DLPLogSetup
