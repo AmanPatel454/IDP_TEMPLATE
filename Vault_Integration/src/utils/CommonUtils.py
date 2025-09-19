@@ -187,3 +187,23 @@ def get_buckets(agent_name, env):
         raise ValueError("env must be 'dev' or 'test'")
 
     return source_bucket, dest_bucket
+
+
+def get_current_environment() -> str:
+    """Get current environment from config"""
+    try:
+        config = get_config()
+        logger.info("Fetching current environment from config")
+        return config[CommonUtilsConstants.ENVIRONMENT_KEY]
+    except Exception as ex:
+        raise Exception(f"ERROR::Unable to fetch current environment: {str(ex)}")
+
+
+def get_current_region() -> str:
+    """Get current region from config"""
+    try:
+        config = get_config()
+        logger.info("Fetching current region from config")
+        return config[CommonUtilsConstants.REGION_KEY]
+    except Exception as ex:
+        raise Exception(f"ERROR::Unable to fetch current region: {str(ex)}")
