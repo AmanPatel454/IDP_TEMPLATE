@@ -15,6 +15,9 @@ from typing import Dict, Any, Tuple, Union
 
 # Import constants
 from . import CommonUtilsConstants
+from . import DLPLogSetup
+
+logger = DLPLogSetup.get_logger()
 
 
 def get_config() -> Dict[str, Any]:
