@@ -10,5 +10,17 @@
   "SECRET_ID_KEY": "838e349b-9e74-c46a-cff6-87c349319d0c",
   "TST_SECRET_ENGINE": "kv-test",
   "PRD_SECRET_ENGINE": "kv-prd",
-  "DEV_SECRET_ENGINE": "kv-dev"
+  "DEV_SECRET_ENGINE": "kv-dev",
+  "databricks": {
+        "all_environment": {
+            "databricks_backend_table_auth": {
+                "databricks_url": "https://onetakeda-usdev.cloud.databricks.com",
+                "databricks_sqlwh_http_path": "sql/1.0/warehouses/1c20d25345f87b3f"
+            },
+            "databricks_account_url": "https://accounts.cloud.databricks.com",
+            "databricks_account_id": "4a71388f-8e5a-4012-83ca-3d2950145023",
+            "backend_metadata_table_name": "usdev_eda.ent_us_raw_dlp.edb_data_launchpad_metadata_ext"
+              }
+            }  
+
 }
