@@ -38,8 +38,6 @@ EU_KEY = "EU"
 US_REGION = "us-east-1"
 EU_REGION = "eu-central-1"
 JP_REGION = "ap-northeast-1"
-
-
 KEY_KEY = "Key"
 VALUE_KEY = "Value"
 KEY_KEY_L = "key"
@@ -56,6 +54,8 @@ ENVIRONMENT_ID_KEY = "environment-id"
 REGION_ID_KEY = "region-id"
 IT_TECHNICAL_OWNER_KEY = "it-technical-owner"
 IT_BUSINESS_OWNER_KEY = "it-business-owner"
+TECHNICAL_OWNER_EMAIL_KEY = "technical_owner_email_id" 
+BUSINESS_OWNER_EMAIL_KEY = "business_owner_email_id"
 VERSION_KEY = "version"
 VERSION_VALUE = "2022-03-30"
 S3_VERSIONING_ENABLED = "s3_versioning_enabled"
@@ -118,9 +118,9 @@ BACKEND_IDMC_METADATA_TABLE_NAME_KEY = "backend_idmc_metadata_table_name"
 DATABRICKS_BACKEND_TABLE_AUTH_KEY = "databricks_backend_table_auth"
 DATABRICKS_URL_KEY = "databricks_url"
 DATABRICKS_SQLWH_HTTP_PATH_KEY = "databricks_sqlwh_http_path"
-BACKEND_METADATA_TABLE_NAME_OLD = "hive_metastore.com_us_lake.edb_data_platform_launchpad_metadata"
-BACKEND_METADATA_TABLE_NAME = "dbx_uc_usdev.ent_us_raw_dlp.edb_data_launchpad_metadata_ext"
-BACKEND_COUNTER_METADATA_TABLE_NAME = "dbx_uc_usdev.ent_us_raw_dlp.edb_data_launchpad_counter_metadata_ext"
+# BACKEND_METADATA_TABLE_NAME_OLD = "hive_metastore.com_us_lake.edb_data_platform_launchpad_metadata"
+# BACKEND_METADATA_TABLE_NAME = "dbx_uc_usdev.ent_us_raw_dlp.edb_data_launchpad_metadata_ext"
+# BACKEND_COUNTER_METADATA_TABLE_NAME = "dbx_uc_usdev.ent_us_raw_dlp.edb_data_launchpad_counter_metadata_ext"
 PROJECT_ID_KEY = "project-id"
 PROJECT_NAME_KEY = "project-name"
 ALL_ENVIRONMENT_KEY = "all_environment"
@@ -149,37 +149,25 @@ EXCLUDE_SCHEMA_LIST = ["system", "information_schema", "default"]
 BACKEND_INFO_SCHEMATA_TABLE_NAME = "system.information_schema.schemata"
 AIRFLOW_SERVICE_CREDENTIAL = "airflow-service-credential-<environment>"
 
+#updated these columns based on our metadata table
 BACKEND_METADATA_TABLE_COLUMNS = [
-    "request_insert_dt",
     "apms_id",
+    "request_insert_dt",
     "edb_id",
     "project_name",
-    "project_description",
-    "project_justification",
     "requestor_email_id",
-    "environment",
+    "migrate_type",
+    "deployment_requested",
     "region",
-    "sns_distribution_list",
-    "data_classification",
-    "business_unit",
     "technical_owner_email_id",
     "business_owner_email_id",
     "technical_owner_approval_status",
     "business_owner_approval_status",
-    "technical_owner_comments",
-    "business_owner_comments",
-    "infra_provision_status",
-    "request_creation_dt",
-    "technical_owner_approval_dt",
-    "business_owner_approval_dt",
-    "request_end_dt",
-    "kms_key_id",
-    "request_type",
-    "pipeline_id",
-    "build_id",
-    "bsn_id",
-    "infra_requested"
+    "approval_date",
+    "pipeline_execution_results",
+    "build_id"
 ]
+
 
 
 BACKEND_IDMC_METADATA_TABLE_COLUMNS = [
@@ -260,31 +248,10 @@ WHERE_QUERY_KEY = "environment = '{environment}' and edb_id = '{edb_id}' and req
 SELECT_QUERY_KEY = "count(*)"
 NONE_KEY = "None"
 MODIFY_WHERE_QUERY_KEY = "environment = '{environment}' and edb_id = '{edb_id}' and request_type = 'MODIFY' and (infra_provision_status = 'PENDING' or infra_provision_status = 'STARTED')"
-# LOGS
-HARNESS_FOLDER_PATH = "/harness/logs/"
-LOGS_ZIP_FILENAME = "logs.zip"
-LOG_SERVICE_URL = "https://app.harness.io/gateway/log-service/blob/download"
-HARNESS_SECRET_PATH = "ODPE/harness"
-HARNESS_X_API_KEY = "x-api-key"
+
 
 SECRET_MANAGER_KEY = "secretsmanager"
-HARNESS_API_SECRET_NAME = "automation-eda-datalaunchpad-harness"
 
-HARNESS_DEV_CREATE_PIPELINE_ID = "harness_dev_create_pipeline_id"
-HARNESS_DEV_MODIFY_PIPELINE_ID = "harness_dev_modify_pipeline_id"
-HARNESS_DEV_IDMC_CONNECTION_PIPELINE_ID = "harness_dev_idmc_connection_pipeline_id"
-HARNESS_TST_CREATE_PIPELINE_ID = "harness_tst_create_pipeline_id"
-HARNESS_TST_MODIFY_PIPELINE_ID = "harness_tst_modify_pipeline_id"
-HARNESS_TST_IDMC_CONNECTION_PIPELINE_ID = "harness_tst_idmc_connection_pipeline_id"
-HARNESS_PRD_CREATE_PIPELINE_ID = "harness_prd_create_pipeline_id"
-HARNESS_PRD_MODIFY_PIPELINE_ID = "harness_prd_modify_pipeline_id"
-HARNESS_PRD_IDMC_CONNECTION_PIPELINE_ID = "harness_prd_idmc_connection_pipeline_id"
-HARNESS_DEV_PIPELINE_API_BASEURL = "harness_dev_pipeline_api_base_url"
-HARNESS_TST_PIPELINE_API_BASEURL = "harness_tst_pipeline_api_base_url"
-HARNESS_PRD_PIPELINE_API_BASEURL = "harness_prd_pipeline_api_base_url"
-
-AWS_DBX_DATALAUNCHPAD_BUCKET_NAME = "tpc-aws-ted-<environment>-edpp-dbx-datalaunchpad-ent-us-east-1"
-SCHEMA_LIST_FILE_KEY = "infra_dlp_schema_list/<environment>_<region>.json"
 REQUEST_CONNECTION_TYPE = "connection_type"
 REQUEST_CONNECTION_NAME = "connection_name"
 
@@ -292,5 +259,3 @@ OKTA_DOMAIN = "https://takeda.okta.com"
 OKTA_AUDIENCE = "api://default"
 OKTA_ISSUER = f"{OKTA_DOMAIN}/oauth2/default"
 OKTA_JWKS_URL = f"{OKTA_ISSUER}/v1/keys"
-
-TEC_ACCOUNT_KEY = "tec_account_id"
