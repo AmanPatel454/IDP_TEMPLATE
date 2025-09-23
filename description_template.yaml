@@ -1,0 +1,200 @@
+apiVersion: harness.io/v1
+kind: Workflow
+name: EDA_Airflow_IDMC_Deployment_1
+identifier: EDA_Airflow_IDMC_Deployment_8
+type: service
+owner: user:account/vivek.sharma@takeda.com
+projectIdentifier: EDA
+orgIdentifier: GDDT
+metadata: {}
+spec:
+  output:
+    resultLink: "${{ steps.execute-pipeline.output.resultLink }}"
+  parameters:
+    - title: Basic Info
+      required:
+        - requesterName
+        - requesterEmail
+        - token
+        - edbId
+        - environment
+      properties:
+        requesterName:
+          title: Your Name
+          type: string
+          description: Your Full name
+        requesterEmail:
+          title: Your Email
+          type: string
+          description: Your Takeda Email address
+          pattern: "^[a-zA-Z0-9._%+-]+@[tT][aA][kK][eE][dD][aA]\\.com$"
+          patternErrorMessage: "Please enter a valid Takeda email address"
+        token:
+          title: Harness Token
+          type: string
+          ui:widget: password
+          ui:field: HarnessAuthToken
+          description: Harness API key to authenticate the trigger action
+        edbId:
+          title: EDB ID
+          type: string
+          description: Your EDB ID (numbers only)
+          pattern: "^\\d+$"
+        environment:
+          title: Migration Environment
+          type: string
+          description: Select the source and target environment for the migration
+          ui:widget: radio
+          enum:
+            - Dev to Test
+            - Test to Prod
+    - title: Basic Migration Details
+      required:
+        - updateCreateConnection
+        - updateCreateVariable
+        - fullMigration
+      properties:
+        gitRepository:
+          title: Git Repository URL
+          type: string
+          description: Enter the Git repository URL where your code resides.
+          ui:placeholder: "https://github.com/org/repo.git"
+        updateCreateConnection:
+          title: Update/Create Connection
+          type: string
+          description: It'll fetch the connection details from the vault folder\connections. Make sure you have added/updated the connection.
+          ui:widget: radio
+          enum:
+            - "Yes"
+            - "No"
+          default: "Yes"
+        updateCreateVariable:
+          title: Update/Create Variable
+          type: string
+          description: It'll fetch the variables details from the vault folder\variables. Make sure you have added/updated the variables.
+          ui:widget: radio
+          enum:
+            - "Yes"
+            - "No"
+          default: "Yes"
+        fullMigration:
+          title: Full Migration
+          type: string
+          description: Select 'Yes' for full migration. This will migrate your DAG folder, plugins folder and requirement.txt and automatically update the version in MWAA.
+          ui:widget: radio
+          enum:
+            - 'Yes'
+            - 'No'
+          default: 'Yes'
+      dependencies:
+        fullMigration:
+          oneOf:
+            - properties:
+                fullMigration:
+                  enum:
+                    - 'Yes'
+            - required:
+                - migrationComponents
+              properties:
+                fullMigration:
+                  enum:
+                    - "No"
+                migrationComponents:
+                  type: array
+                  title: Select Components to Migrate
+                  ui:widget: checkboxes
+                  ui:options:
+                    inline: true
+                  items:
+                    type: string
+                    enum:
+                      - DAGs
+                      - Plugins
+                      - Requirements
+                  uniqueItems: true
+        migrationComponents:
+          oneOf:
+            - required:
+                - dagFileNames
+              properties:
+                migrationComponents:
+                  contains:
+                    enum:
+                      - DAGs
+                dagFileNames:
+                  title: DAG File Names
+                  type: string
+                  description: Enter the DAG file names you want to migrate (comma-separated like dag1.py, dag2.py). Note - File names should be exactly the same as mentioned in S3
+                  ui:placeholder: dag1.py, dag2.py, dag3.py
+    - title: Airflow_IDMC
+      required:
+        - Platform
+      properties:
+        Platform:
+          type: array
+          title: Select Platform(s)
+          ui:widget: checkboxes
+          ui:options:
+            inline: true
+          description: Select one or more platforms to trigger
+          items:
+            type: string
+            enum:
+              - Airflow
+              - IDMC
+          uniqueItems: true
+        airflowSpecificField:
+          type: string
+          title: Airflow Specific Option
+          ui:widget: radio
+          enum:
+            - Option1
+            - Option2
+          description: Airflow specific configuration option
+        idmcSpecificField:
+          type: string
+          title: IDMC Specific Option
+          ui:widget: radio
+          enum:
+            - OptionA
+            - OptionB
+          description: IDMC specific configuration option
+      dependencies:
+        Platform:
+          oneOf:
+            - properties:
+                Platform:
+                  contains: ["Airflow"]
+                airflowSpecificField:
+                  enum: ["Option1", "Option2"]
+            - properties:
+                Platform:
+                  contains: ["IDMC"]
+                idmcSpecificField:
+                  enum: ["OptionA", "OptionB"]
+            - properties:
+                Platform:
+                  contains: ["Airflow", "IDMC"]
+                airflowSpecificField:
+                  enum: ["Option1", "Option2"]
+                idmcSpecificField:
+                  enum: ["OptionA", "OptionB"]
+
+  steps:
+    - id: execute-pipeline
+      name: Execute Harness Pipeline
+      action: trigger:harness-custom-pipeline
+      input:
+        url: https://app.harness.io/ng/account/etUzqvIyRSixpOWJqF4_Qg/all/orgs/GDDT/projects/EDA/pipelines/Demo_Airflow_CICD_Automation/pipeline-studio/?storeType=INLINE
+        inputset:
+          requesterName: "${{ parameters.requesterName }}"
+          requesterEmail: "${{ parameters.requesterEmail }}"
+          edb_id: "${{ parameters.edbId }}"
+          environment: "${{ parameters.environment }}"
+          fullMigration: "${{ parameters.fullMigration }}"
+          updateCreateConnection: "${{ parameters.updateCreateConnection }}"
+          updateCreateVariable: "${{ parameters.updateCreateVariable }}"
+          migrationComponents: "${{ parameters.migrationComponents.join(',') }}"
+          dagFileNames: "${{ parameters.dagFileNames }}"
+          gitRepository: "${{ parameters.gitRepository }}"
+        apikey: "${{ parameters.token }}"
