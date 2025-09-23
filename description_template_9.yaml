@@ -1,15 +1,13 @@
 apiVersion: harness.io/v1
 kind: Workflow
 name: EDA_Airflow_IDMC_Deployment_Only
-identifier: EDA_Airflow_IDMC_Deployment_Only
+identifier: EDA_Airflow_IDMC_Deployment_Only_1
 type: service
 owner: user:account/vivek.sharma@takeda.com
 projectIdentifier: EDA
 orgIdentifier: GDDT
 metadata: {}
 spec:
-  output:
-    resultLink: "${{ steps.execute-pipeline.output.resultLink }}"
   parameters:
     - title: Airflow_IDMC
       required:
@@ -33,7 +31,6 @@ spec:
           oneOf:
             # Case 1: Airflow selected
             - required:
-                - Platform
                 - airflowSpecificField
               properties:
                 Platform:
@@ -51,7 +48,6 @@ spec:
 
             # Case 2: IDMC selected
             - required:
-                - Platform
                 - idmcSpecificField
               properties:
                 Platform:
@@ -69,7 +65,6 @@ spec:
 
             # Case 3: Both Airflow + IDMC selected
             - required:
-                - Platform
                 - airflowSpecificField
                 - idmcSpecificField
               properties:
@@ -94,15 +89,3 @@ spec:
                   enum:
                     - OptionA
                     - OptionB
-
-  steps:
-    - id: execute-pipeline
-      name: Execute Harness Pipeline
-      action: trigger:harness-custom-pipeline
-      input:
-        url: https://app.harness.io/ng/account/etUzqvIyRSixpOWJqF4_Qg/all/orgs/GDDT/projects/EDA/pipelines/Demo_Airflow_CICD_Automation/pipeline-studio/?storeType=INLINE
-        inputset:
-          Platform: "${{ parameters.Platform.join(',') }}"
-          airflowSpecificField: "${{ parameters.airflowSpecificField }}"
-          idmcSpecificField: "${{ parameters.idmcSpecificField }}"
-        apikey: "${{ parameters.token }}"
