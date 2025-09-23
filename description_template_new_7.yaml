@@ -1,7 +1,7 @@
 apiVersion: harness.io/v1
 kind: Workflow
 name: EDA_Airflow_IDMC_Deployment_1
-identifier: EDA_Airflow_IDMC_Deployment_6
+identifier: EDA_Airflow_IDMC_Deployment_7
 type: service
 owner: user:account/vivek.sharma@takeda.com
 projectIdentifier: EDA
@@ -132,81 +132,92 @@ spec:
     - title: Airflow_IDMC
       required:
         - Platform
-      properties:
-        Platform:
-          type: array
-          title: Select Platform(s)
-          ui:widget: checkboxes
-          ui:options:
-            inline: true
-          description: Select one or more platforms to trigger
-          items:
-            type: string
-            enum:
-              - Airflow
-              - IDMC
-          uniqueItems: true
-      dependencies:
-        Platform:
-          oneOf:
-            # Case 1: Airflow selected
-            - required:
-                - airflowSpecificField
-              properties:
-                Platform:
-                  contains:
-                    enum:
-                      - Airflow
-                airflowSpecificField:
-                  title: Airflow Specific Option
-                  type: string
-                  description: Airflow specific configuration option
-                  ui:widget: radio
-                  enum:
-                    - Option1
-                    - Option2
-            # Case 2: IDMC selected
-            - required:
-                - idmcSpecificField
-              properties:
-                Platform:
-                  contains:
-                    enum:
-                      - IDMC
-                idmcSpecificField:
-                  title: IDMC Specific Option
-                  type: string
-                  description: IDMC specific configuration option
-                  ui:widget: radio
-                  enum:
-                    - OptionA
-                    - OptionB
-            # Case 3: Both selected
-            - required:
-                - airflowSpecificField
-                - idmcSpecificField
-              properties:
-                Platform:
-                  contains:
-                    enum:
-                      - Airflow
-                      - IDMC
-                airflowSpecificField:
-                  title: Airflow Specific Option
-                  type: string
-                  description: Airflow specific configuration option
-                  ui:widget: radio
-                  enum:
-                    - Option1
-                    - Option2
-                idmcSpecificField:
-                  title: IDMC Specific Option
-                  type: string
-                  description: IDMC specific configuration option
-                  ui:widget: radio
-                  enum:
-                    - OptionA
-                    - OptionB
+      oneOf:
+        # Case 1: Airflow selected
+        - required:
+            - Platform
+            - airflowSpecificField
+          properties:
+            Platform:
+              type: array
+              title: Select Platform(s)
+              ui:widget: checkboxes
+              ui:options:
+                inline: true
+              description: Select one or more platforms to trigger
+              items:
+                type: string
+                enum:
+                  - Airflow
+              uniqueItems: true
+            airflowSpecificField:
+              title: Airflow Specific Option
+              type: string
+              description: Airflow specific configuration option
+              ui:widget: radio
+              enum:
+                - Option1
+                - Option2
+        # Case 2: IDMC selected
+        - required:
+            - Platform
+            - idmcSpecificField
+          properties:
+            Platform:
+              type: array
+              title: Select Platform(s)
+              ui:widget: checkboxes
+              ui:options:
+                inline: true
+              description: Select one or more platforms to trigger
+              items:
+                type: string
+                enum:
+                  - IDMC
+              uniqueItems: true
+            idmcSpecificField:
+              title: IDMC Specific Option
+              type: string
+              description: IDMC specific configuration option
+              ui:widget: radio
+              enum:
+                - OptionA
+                - OptionB
+        # Case 3: Both selected
+        - required:
+            - Platform
+            - airflowSpecificField
+            - idmcSpecificField
+          properties:
+            Platform:
+              type: array
+              title: Select Platform(s)
+              ui:widget: checkboxes
+              ui:options:
+                inline: true
+              description: Select one or more platforms to trigger
+              items:
+                type: string
+                enum:
+                  - Airflow
+                  - IDMC
+              uniqueItems: true
+            airflowSpecificField:
+              title: Airflow Specific Option
+              type: string
+              description: Airflow specific configuration option
+              ui:widget: radio
+              enum:
+                - Option1
+                - Option2
+            idmcSpecificField:
+              title: IDMC Specific Option
+              type: string
+              description: IDMC specific configuration option
+              ui:widget: radio
+              enum:
+                - OptionA
+                - OptionB
 
   steps:
     - id: execute-pipeline
