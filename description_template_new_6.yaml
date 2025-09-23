@@ -1,7 +1,7 @@
 apiVersion: harness.io/v1
 kind: Workflow
 name: EDA_Airflow_IDMC_Deployment_1
-identifier: EDA_Airflow_IDMC_Deployment_5
+identifier: EDA_Airflow_IDMC_Deployment_6
 type: service
 owner: user:account/vivek.sharma@takeda.com
 projectIdentifier: EDA
@@ -160,7 +160,7 @@ spec:
                 airflowSpecificField:
                   title: Airflow Specific Option
                   type: string
-                  description: Some Airflow-specific field (example)
+                  description: Airflow specific configuration option
                   ui:widget: radio
                   enum:
                     - Option1
@@ -176,7 +176,7 @@ spec:
                 idmcSpecificField:
                   title: IDMC Specific Option
                   type: string
-                  description: Some IDMC-specific field (example)
+                  description: IDMC specific configuration option
                   ui:widget: radio
                   enum:
                     - OptionA
@@ -194,7 +194,7 @@ spec:
                 airflowSpecificField:
                   title: Airflow Specific Option
                   type: string
-                  description: Some Airflow-specific field (example)
+                  description: Airflow specific configuration option
                   ui:widget: radio
                   enum:
                     - Option1
@@ -202,15 +202,12 @@ spec:
                 idmcSpecificField:
                   title: IDMC Specific Option
                   type: string
-                  description: Some IDMC-specific field (example)
+                  description: IDMC specific configuration option
                   ui:widget: radio
                   enum:
                     - OptionA
                     - OptionB
 
-
-
-        
   steps:
     - id: execute-pipeline
       name: Execute Harness Pipeline
