@@ -8,6 +8,8 @@ projectIdentifier: EDA
 orgIdentifier: GDDT
 metadata: {}
 spec:
+  output:
+    resultLink: "${{ steps.execute-pipeline.output.resultLink }}"
   parameters:
     - title: Airflow_IDMC
       required:
@@ -30,7 +32,10 @@ spec:
         Platform:
           oneOf:
             # Case 1: Airflow selected
-            - properties:
+            - required:
+                - Platform
+                - airflowSpecificField
+              properties:
                 Platform:
                   contains:
                     enum:
@@ -43,8 +48,12 @@ spec:
                   enum:
                     - Option1
                     - Option2
+
             # Case 2: IDMC selected
-            - properties:
+            - required:
+                - Platform
+                - idmcSpecificField
+              properties:
                 Platform:
                   contains:
                     enum:
@@ -57,15 +66,17 @@ spec:
                   enum:
                     - OptionA
                     - OptionB
-            # Case 3: Both selected
-            - properties:
+
+            # Case 3: Both Airflow + IDMC selected
+            - required:
+                - Platform
+                - airflowSpecificField
+                - idmcSpecificField
+              properties:
                 Platform:
                   contains:
                     enum:
                       - Airflow
-                Platform:
-                  contains:
-                    enum:
                       - IDMC
                 airflowSpecificField:
                   title: Airflow Specific Option
@@ -83,3 +94,15 @@ spec:
                   enum:
                     - OptionA
                     - OptionB
+
+  steps:
+    - id: execute-pipeline
+      name: Execute Harness Pipeline
+      action: trigger:harness-custom-pipeline
+      input:
+        url: https://app.harness.io/ng/account/etUzqvIyRSixpOWJqF4_Qg/all/orgs/GDDT/projects/EDA/pipelines/Demo_Airflow_CICD_Automation/pipeline-studio/?storeType=INLINE
+        inputset:
+          Platform: "${{ parameters.Platform.join(',') }}"
+          airflowSpecificField: "${{ parameters.airflowSpecificField }}"
+          idmcSpecificField: "${{ parameters.idmcSpecificField }}"
+        apikey: "${{ parameters.token }}"
