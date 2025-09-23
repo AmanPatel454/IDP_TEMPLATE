@@ -1,7 +1,7 @@
 apiVersion: harness.io/v1
 kind: Workflow
 name: EDA_Airflow_IDMC_Deployment_1
-identifier: EDA_Airflow_IDMC_Deployment_9
+identifier: EDA_Airflow_IDMC_Deployment_10
 type: service
 owner: user:account/vivek.sharma@takeda.com
 projectIdentifier: EDA
@@ -143,21 +143,71 @@ spec:
               - Airflow
               - IDMC
           uniqueItems: true
-      dependencies:  
+
+      dependencies:
         Platform:
           oneOf:
+            # When Airflow selected
             - required:
-                - dagFileNames
+                - airflowSpecificField
               properties:
                 Platform:
                   contains:
                     enum:
-                      - DAGs
-                dagFileNames:
-                  title: DAG File Names
+                      - Airflow
+                airflowSpecificField:
+                  title: Airflow Specific Option
                   type: string
-                  description: Enter the DAG file names you want to migrate (comma-separated like dag1.py, dag2.py). Note - File names should be exactly the same as mentioned in S3
-                  ui:placeholder: dag1.py, dag2.py, dag3.py
+                  description: Airflow specific configuration option
+                  ui:widget: radio
+                  enum:
+                    - Option1
+                    - Option2
+
+            # When IDMC selected
+            - required:
+                - idmcSpecificField
+              properties:
+                Platform:
+                  contains:
+                    enum:
+                      - IDMC
+                idmcSpecificField:
+                  title: IDMC Specific Option
+                  type: string
+                  description: IDMC specific configuration option
+                  ui:widget: radio
+                  enum:
+                    - OptionA
+                    - OptionB
+
+            # When both selected
+            - required:
+                - airflowSpecificField
+                - idmcSpecificField
+              properties:
+                Platform:
+                  contains:
+                    enum:
+                      - Airflow
+                      - IDMC
+                airflowSpecificField:
+                  title: Airflow Specific Option
+                  type: string
+                  description: Airflow specific configuration option
+                  ui:widget: radio
+                  enum:
+                    - Option1
+                    - Option2
+                idmcSpecificField:
+                  title: IDMC Specific Option
+                  type: string
+                  description: IDMC specific configuration option
+                  ui:widget: radio
+                  enum:
+                    - OptionA
+                    - OptionB
+
 
 
   steps:
