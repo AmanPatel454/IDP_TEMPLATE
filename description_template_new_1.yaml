@@ -1,0 +1,47 @@
+apiVersion: harness.io/v1
+kind: Workflow
+type: service
+identifier: pipeline_switcher
+name: Pipeline_Switcher
+owner: user:account/sahil.rajput@takeda.com
+orgIdentifier: GDDT
+projectIdentifier: EDA
+spec:
+  parameters:
+  - title: Pipeline Choice
+    required:
+    - pipelineChoice
+    - token
+    properties:
+      pipelineChoice:
+        title: Which pipeline do you want to run?
+        type: string
+        ui:widget: radio
+        enum:
+        - Airflow
+        - IDMC
+      token:
+        title: Harness Token
+        type: string
+        ui:widget: password
+        ui:field: HarnessAuthToken
+        description: Harness API key to authenticate the trigger action
+  steps:
+  - id: run-airflow
+    name: Run Airflow Pipeline
+    when:
+      condition: <+parameters.pipelineChoice> == 'Airflow'
+    action: trigger:harness-custom-pipeline
+    input:
+      url: https://app.harness.io/ng/account/etUzqvIyRSixpOWJqF4_Qg/all/orgs/GDDT/projects/EDA/pipelines/IDP_PIPELINE_2_Clone/pipeline-studio/?storeType=INLINE
+      inputset: null
+      apikey: ${{ parameters.token }}
+  - id: run-idmc
+    name: Run IDMC Pipeline
+    when:
+      condition: <+parameters.pipelineChoice> == 'IDMC'
+    action: trigger:harness-custom-pipeline
+    input:
+      url: https://app.harness.io/ng/account/etUzqvIyRSixpOWJqF4_Qg/all/orgs/GDDT/projects/EDA/pipelines/IDP_PIPELINE_1/pipeline-studio/?storeType=INLINE
+      inputset: null
+      apikey: ${{ parameters.token }}
