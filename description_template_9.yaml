@@ -1,7 +1,7 @@
 apiVersion: harness.io/v1
 kind: Workflow
 name: EDA_Airflow_IDMC_Deployment_1
-identifier: EDA_Airflow_IDMC_Deployment_8
+identifier: EDA_Airflow_IDMC_Deployment_9
 type: service
 owner: user:account/vivek.sharma@takeda.com
 projectIdentifier: EDA
@@ -143,42 +143,22 @@ spec:
               - Airflow
               - IDMC
           uniqueItems: true
-        airflowSpecificField:
-          type: string
-          title: Airflow Specific Option
-          ui:widget: radio
-          enum:
-            - Option1
-            - Option2
-          description: Airflow specific configuration option
-        idmcSpecificField:
-          type: string
-          title: IDMC Specific Option
-          ui:widget: radio
-          enum:
-            - OptionA
-            - OptionB
-          description: IDMC specific configuration option
-      dependencies:
+      dependencies:  
         Platform:
           oneOf:
-            - properties:
+            - required:
+                - dagFileNames
+              properties:
                 Platform:
-                  contains: ["Airflow"]
-                airflowSpecificField:
-                  enum: ["Option1", "Option2"]
-            - properties:
-                Platform:
-                  contains: ["IDMC"]
-                idmcSpecificField:
-                  enum: ["OptionA", "OptionB"]
-            - properties:
-                Platform:
-                  contains: ["Airflow", "IDMC"]
-                airflowSpecificField:
-                  enum: ["Option1", "Option2"]
-                idmcSpecificField:
-                  enum: ["OptionA", "OptionB"]
+                  contains:
+                    enum:
+                      - DAGs
+                dagFileNames:
+                  title: DAG File Names
+                  type: string
+                  description: Enter the DAG file names you want to migrate (comma-separated like dag1.py, dag2.py). Note - File names should be exactly the same as mentioned in S3
+                  ui:placeholder: dag1.py, dag2.py, dag3.py
+
 
   steps:
     - id: execute-pipeline
