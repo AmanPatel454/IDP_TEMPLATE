@@ -147,7 +147,7 @@ spec:
       dependencies:
         Platform:
           oneOf:
-            # Case 1: Airflow selected
+            # Case 1: Airflow only
             - properties:
                 Platform:
                   contains:
@@ -164,7 +164,7 @@ spec:
                   enum:
                     - Option1
                     - Option2
-            # Case 2: IDMC selected
+            # Case 2: IDMC only
             - properties:
                 Platform:
                   contains:
@@ -181,7 +181,7 @@ spec:
                   enum:
                     - OptionA
                     - OptionB
-            # Case 3: Both selected
+            # Case 3: Both Airflow & IDMC
             - properties:
                 Platform:
                   contains:
@@ -208,6 +208,7 @@ spec:
                   enum:
                     - OptionA
                     - OptionB
+
 
         
   steps:
