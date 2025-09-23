@@ -132,9 +132,6 @@ spec:
     - title: Airflow_IDMC
       required:
         - Platform
-    - title: Airflow_IDMC
-      required:
-        - Platform
       properties:
         Platform:
           title: Select Platform(s)
