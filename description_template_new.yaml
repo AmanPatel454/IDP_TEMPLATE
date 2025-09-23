@@ -1,7 +1,7 @@
 apiVersion: harness.io/v1
 kind: Workflow
 name: Pipeline_Switcher
-identifier: pipeline_switcher
+identifier: pipeline_switcher_1
 type: service
 owner: user:account/sahil.rajput@takeda.com
 projectIdentifier: EDA
