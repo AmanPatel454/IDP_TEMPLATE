@@ -89,3 +89,14 @@ spec:
                   enum:
                     - OptionA
                     - OptionB
+  steps:
+    - id: execute-pipeline
+      name: Execute Harness Pipeline
+      action: trigger:harness-custom-pipeline
+      input:
+        url: https://app.harness.io/ng/account/etUzqvIyRSixpOWJqF4_Qg/all/orgs/GDDT/projects/EDA/pipelines/Demo_Airflow_CICD_Automation/pipeline-studio/?storeType=INLINE
+        inputset:
+          Platform: "${{ parameters.Platform.join(',') }}"
+          airflowSpecificField: "${{ parameters.airflowSpecificField }}"
+          idmcSpecificField: "${{ parameters.idmcSpecificField }}"
+        apikey: "${{ parameters.token }}"
