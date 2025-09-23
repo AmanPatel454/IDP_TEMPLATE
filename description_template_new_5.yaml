@@ -134,9 +134,11 @@ spec:
         - Platform
       properties:
         Platform:
-          title: Select Platform(s)
           type: array
+          title: Select Platform(s)
           ui:widget: checkboxes
+          ui:options:
+            inline: true
           description: Select one or more platforms to trigger
           items:
             type: string
@@ -147,15 +149,14 @@ spec:
       dependencies:
         Platform:
           oneOf:
-            # Case 1: Airflow only
-            - properties:
+            # Case 1: Airflow selected
+            - required:
+                - airflowSpecificField
+              properties:
                 Platform:
                   contains:
                     enum:
                       - Airflow
-              required:
-                - airflowSpecificField
-              properties:
                 airflowSpecificField:
                   title: Airflow Specific Option
                   type: string
@@ -164,15 +165,14 @@ spec:
                   enum:
                     - Option1
                     - Option2
-            # Case 2: IDMC only
-            - properties:
+            # Case 2: IDMC selected
+            - required:
+                - idmcSpecificField
+              properties:
                 Platform:
                   contains:
                     enum:
                       - IDMC
-              required:
-                - idmcSpecificField
-              properties:
                 idmcSpecificField:
                   title: IDMC Specific Option
                   type: string
@@ -181,17 +181,16 @@ spec:
                   enum:
                     - OptionA
                     - OptionB
-            # Case 3: Both Airflow & IDMC
-            - properties:
+            # Case 3: Both selected
+            - required:
+                - airflowSpecificField
+                - idmcSpecificField
+              properties:
                 Platform:
                   contains:
                     enum:
                       - Airflow
                       - IDMC
-              required:
-                - airflowSpecificField
-                - idmcSpecificField
-              properties:
                 airflowSpecificField:
                   title: Airflow Specific Option
                   type: string
@@ -208,6 +207,7 @@ spec:
                   enum:
                     - OptionA
                     - OptionB
+
 
 
         
