@@ -28,26 +28,22 @@ spec:
           ui:field: HarnessAuthToken
           description: Harness API key to authenticate the trigger action
   steps:
-    # Step 1: Run Airflow pipeline only if user picked Airflow
     - id: run-airflow
       name: Run Airflow Pipeline
       when:
         condition: "<+parameters.pipelineChoice> == 'Airflow'"
       action: trigger:harness-custom-pipeline
       input:
-        url: https://app.harness.io/ng/account/etUzqvIyRSixpOWJqF4_Qg/all/orgs/GDDT/projects/EDA/pipelines/IDP_PIPELINE_2_Clone/pipeline-studio/?storeType=INLINE
-        inputset:
-          # pass any other parameters if needed
+        url: "https://app.harness.io/ng/account/etUzqvIyRSixpOWJqF4_Qg/all/orgs/GDDT/projects/EDA/pipelines/IDP_PIPELINE_2_Clone/pipeline-studio/?storeType=INLINE"
+        inputset: {}      # 👈 empty object
         apikey: "${{ parameters.token }}"
 
-    # Step 2: Run IDMC pipeline only if user picked IDMC
     - id: run-idmc
       name: Run IDMC Pipeline
       when:
         condition: "<+parameters.pipelineChoice> == 'IDMC'"
       action: trigger:harness-custom-pipeline
       input:
-        url:https://app.harness.io/ng/account/etUzqvIyRSixpOWJqF4_Qg/all/orgs/GDDT/projects/EDA/pipelines/IDP_PIPELINE_1/pipeline-studio/?storeType=INLINE
-        inputset:
-          # pass any other parameters if needed
+        url: "https://app.harness.io/ng/account/etUzqvIyRSixpOWJqF4_Qg/all/orgs/GDDT/projects/EDA/pipelines/IDP_PIPELINE_1/pipeline-studio/?storeType=INLINE"
+        inputset: {}      # 👈 empty object
         apikey: "${{ parameters.token }}"
