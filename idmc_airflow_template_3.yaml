@@ -1,7 +1,7 @@
 apiVersion: harness.io/v1
 kind: Workflow
-name: EDA_Airflow_IDMC_Deployment
-identifier: EDA_Airflow_IDMC_Deployment_Only_7
+name: EDA_Airflow_IDMC_Deployment_final
+identifier: EDA_Airflow_IDMC_Deployment_Only_8
 type: service
 owner: user:account/vivek.sharma@takeda.com
 projectIdentifier: EDA
@@ -230,4 +230,7 @@ spec:
           performS3Migration: ${{ parameters.performS3Migration }}
           migrationType: ${{ parameters.migrationType }}
           selectiveAssets: ${{ parameters.selectiveAssets }}
+          run_idmc:  "${{ parameters.enableAirflowMigration }}"
+          run_airflow: "${{ parameters.enableMigrationDetails }}"
+          configurationItem: "${{ parameters.configurationItem }}"
         apikey: ${{ parameters.token }}
