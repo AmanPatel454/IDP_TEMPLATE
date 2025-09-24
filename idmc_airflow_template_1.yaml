@@ -1,7 +1,7 @@
 apiVersion: harness.io/v1
 kind: Workflow
-name: EDA_Airflow_IDMC_Deployment_Only
-identifier: EDA_Airflow_IDMC_Deployment_Only_5
+name: EDA_Airflow_IDMC_Deployment
+identifier: EDA_Airflow_IDMC_Deployment_Only_6
 type: service
 owner: user:account/vivek.sharma@takeda.com
 projectIdentifier: EDA
@@ -14,7 +14,8 @@ spec:
         - requesterName
         - requesterEmail
         - token
-        - edbId
+        - configurationItem
+        - businessOwnerEmail
         - environment
       properties:
         requesterName:
@@ -50,7 +51,7 @@ spec:
           enum:
             - Dev to Test
             - Test to Prod
-        Configuration Item:
+        configurationItem:
           title: Configuration Item
           type: string
           description: Enter the Configuration Item
