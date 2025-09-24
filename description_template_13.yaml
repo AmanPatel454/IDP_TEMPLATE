@@ -1,7 +1,7 @@
 apiVersion: harness.io/v1
 kind: Workflow
 name: EDA_Airflow_IDMC_Deployment_Only
-identifier: EDA_Airflow_IDMC_Deployment_Only_3
+identifier: EDA_Airflow_IDMC_Deployment_Only_4
 type: service
 owner: user:account/vivek.sharma@takeda.com
 projectIdentifier: EDA
@@ -38,6 +38,11 @@ spec:
           type: string
           description: Your EDB ID (numbers only)
           pattern: "^\\d+$"
+        region:
+          title: Region
+          type: string
+          description: Select the cloud region
+          enum: [US, JP, EU]
         environment:
           title: Migration Environment
           type: string
@@ -151,27 +156,14 @@ spec:
                 enableMigrationDetails:
                   enum: ["No"]
             - required:
-                - region
                 - projectName
-                - environment
               properties:
                 enableMigrationDetails:
                   enum: ["Yes"]
-                region:
-                  title: Region
-                  type: string
-                  description: Select the cloud region
-                  enum: [US, JP, EU]
                 projectName:
                   title: Project Name
                   type: string
                   description: The name of the Projet to be migrated
-                environment:
-                  title: Migration Environment
-                  type: string
-                  description: Select the source and target environment for the migration
-                  ui:widget: radio
-                  enum: [Dev to Test, Test to Prod]
                 performS3Migration:
                   title: Do you want to migrate Server Side Components?
                   type: string
