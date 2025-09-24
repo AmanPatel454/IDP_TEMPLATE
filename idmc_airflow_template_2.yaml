@@ -1,7 +1,7 @@
 apiVersion: harness.io/v1
 kind: Workflow
 name: EDA_Airflow_IDMC_Deployment
-identifier: EDA_Airflow_IDMC_Deployment_Only_6
+identifier: EDA_Airflow_IDMC_Deployment_Only_7
 type: service
 owner: user:account/vivek.sharma@takeda.com
 projectIdentifier: EDA
@@ -55,6 +55,7 @@ spec:
           title: Configuration Item
           type: string
           description: Enter the Configuration Item
+
     - title: Airflow Basic Migration Details
       required:
         - enableAirflowMigration
@@ -63,16 +64,16 @@ spec:
           title: Enable Airflow Migration?
           type: string
           ui:widget: radio
-          enum:
-            - "Yes"
-            - "No"
+          enum: ["Yes", "No"]
           default: "No"
       dependencies:
         enableAirflowMigration:
           oneOf:
+            # Case 1: No Airflow Migration
             - properties:
                 enableAirflowMigration:
                   enum: ["No"]
+            # Case 2: Yes Airflow Migration
             - required:
                 - updateCreateConnection
                 - updateCreateVariable
@@ -104,7 +105,7 @@ spec:
                   title: EDB ID
                   type: string
                   description: Your EDB ID (numbers only)
-                  pattern: "^\\d+$"  
+                  pattern: "^\\d+$"
                 fullMigration:
                   title: Full Migration
                   type: string
@@ -114,9 +115,11 @@ spec:
                   default: 'Yes'
         fullMigration:
           oneOf:
+            # Full migration = Yes → no extra fields
             - properties:
                 fullMigration:
                   enum: ['Yes']
+            # Full migration = No → show migrationComponents
             - required:
                 - migrationComponents
               properties:
@@ -134,6 +137,7 @@ spec:
                   uniqueItems: true
         migrationComponents:
           oneOf:
+            # If DAGs selected → require dagFileNames
             - required:
                 - dagFileNames
               properties:
@@ -154,9 +158,7 @@ spec:
           title: Enable Migration Details?
           type: string
           ui:widget: radio
-          enum:
-            - "Yes"
-            - "No"
+          enum: ["Yes", "No"]
           default: "No"
       dependencies:
         enableMigrationDetails:
@@ -172,7 +174,7 @@ spec:
                 projectName:
                   title: Project Name
                   type: string
-                  description: The name of the Projet to be migrated
+                  description: The name of the Project to be migrated
                 performS3Migration:
                   title: Do you want to migrate Server Side Components?
                   type: string
@@ -228,5 +230,4 @@ spec:
           performS3Migration: ${{ parameters.performS3Migration }}
           migrationType: ${{ parameters.migrationType }}
           selectiveAssets: ${{ parameters.selectiveAssets }}
-
         apikey: ${{ parameters.token }}
