@@ -1,7 +1,7 @@
 apiVersion: harness.io/v1
 kind: Workflow
 name: EDA_Airflow_IDMC_Deployment_Only
-identifier: EDA_Airflow_IDMC_Deployment_Only_2
+identifier: EDA_Airflow_IDMC_Deployment_Only_3
 type: service
 owner: user:account/vivek.sharma@takeda.com
 projectIdentifier: EDA
@@ -25,7 +25,6 @@ spec:
           title: Your Email
           type: string
           description: Your Takeda Email address
-          # must end with @takeda.com
           pattern: "^[a-zA-Z0-9._%+-]+@[tT][aA][kK][eE][dD][aA]\\.com$"
           patternErrorMessage: "Please enter a valid Takeda email address"
         token:
@@ -50,57 +49,65 @@ spec:
 
     - title: Airflow Basic Migration Details
       required:
-        - updateCreateConnection
-        - updateCreateVariable
-        - fullMigration
+        - enableAirflowMigration
       properties:
-        gitRepository:                 # <— new field on 2nd page
-          title: Git Repository URL
+        enableAirflowMigration:
+          title: Enable Airflow Migration?
           type: string
-          description: Enter the Git repository URL where your code resides.
-          ui:placeholder: "https://github.com/org/repo.git"
-        updateCreateConnection:
-          title: Update/Create Connection
-          type: string
-          description: It'll fetch the connection details from the vault folder\\connections. Make sure you have added/updated the connection.
           ui:widget: radio
           enum:
             - "Yes"
             - "No"
-          default: "Yes"
-        updateCreateVariable:
-          title: Update/Create Variable
-          type: string
-          description: It'll fetch the variables details from the vault folder\\variables. Make sure you have added/updated the variables.
-          ui:widget: radio
-          enum:
-            - "Yes"
-            - "No"
-          default: "Yes"
-        fullMigration:
-          title: Full Migration
-          type: string
-          description: Select 'Yes' for full migration. This will migrate your DAG folder, plugins folder and requirement.txt and automatically update the version in MWAA.
-          ui:widget: radio
-          enum:
-            - 'Yes'
-            - 'No'
-          default: 'Yes'
+          default: "No"
       dependencies:
+        enableAirflowMigration:
+          oneOf:
+            - properties:
+                enableAirflowMigration:
+                  enum: ["No"]
+            - required:
+                - updateCreateConnection
+                - updateCreateVariable
+                - fullMigration
+              properties:
+                enableAirflowMigration:
+                  enum: ["Yes"]
+                gitRepository:
+                  title: Git Repository URL
+                  type: string
+                  description: Enter the Git repository URL where your code resides.
+                  ui:placeholder: "https://github.com/org/repo.git"
+                updateCreateConnection:
+                  title: Update/Create Connection
+                  type: string
+                  description: It'll fetch the connection details from the vault folder\\connections. Make sure you have added/updated the connection.
+                  ui:widget: radio
+                  enum: ["Yes", "No"]
+                  default: "Yes"
+                updateCreateVariable:
+                  title: Update/Create Variable
+                  type: string
+                  description: It'll fetch the variables details from the vault folder\\variables. Make sure you have added/updated the variables.
+                  ui:widget: radio
+                  enum: ["Yes", "No"]
+                  default: "Yes"
+                fullMigration:
+                  title: Full Migration
+                  type: string
+                  description: Select 'Yes' for full migration. This will migrate your DAG folder, plugins folder and requirement.txt and automatically update the version in MWAA.
+                  ui:widget: radio
+                  enum: ['Yes','No']
+                  default: 'Yes'
         fullMigration:
           oneOf:
-            # Case 1: Full migration Yes – no extra fields
             - properties:
                 fullMigration:
-                  enum:
-                    - 'Yes'
-            # Case 2: Full migration No – require migrationComponents (and possibly dagFileNames)
+                  enum: ['Yes']
             - required:
                 - migrationComponents
               properties:
                 fullMigration:
-                  enum:
-                    - "No"
+                  enum: ['No']
                 migrationComponents:
                   type: array
                   title: Select Components to Migrate
@@ -109,10 +116,7 @@ spec:
                     inline: true
                   items:
                     type: string
-                    enum:
-                      - DAGs
-                      - Plugins
-                      - Requirements
+                    enum: [DAGs, Plugins, Requirements]
                   uniqueItems: true
         migrationComponents:
           oneOf:
@@ -121,8 +125,7 @@ spec:
               properties:
                 migrationComponents:
                   contains:
-                    enum:
-                      - DAGs
+                    enum: [DAGs]
                 dagFileNames:
                   title: DAG File Names
                   type: string
@@ -131,58 +134,65 @@ spec:
 
     - title: Migration Details
       required:
-        - region
-        - projectName
-        - environment
+        - enableMigrationDetails
       properties:
-        region:
-          title: Region
+        enableMigrationDetails:
+          title: Enable Migration Details?
           type: string
-          description: Select the cloud region
-          enum:
-            - US
-            - JP
-            - EU
-        projectName:
-          title: Project Name
-          type: string
-          description: The name of the Projet to be migrated
-        environment:
-          title: Migration Environment
-          type: string
-          description: Select the source and target environment for the migration
           ui:widget: radio
           enum:
-            - Dev to Test
-            - Test to Prod
-        performS3Migration:
-          title: Do you want to migrate Server Side Components?
-          type: string
-          description: Select 'Yes' to include the Server Side Components in the migration.
-          ui:widget: radio
-          enum:
-            - "No"
             - "Yes"
-        migrationType:
-          title: Migration Type
-          type: string
-          description: Choose whether to migrate the entire project or only specific assets.
-          ui:widget: radio
-          default: Full Migration
-          enum:
-            - Full Migration
-            - Selective Migration
+            - "No"
+          default: "No"
       dependencies:
+        enableMigrationDetails:
+          oneOf:
+            - properties:
+                enableMigrationDetails:
+                  enum: ["No"]
+            - required:
+                - region
+                - projectName
+                - environment
+              properties:
+                enableMigrationDetails:
+                  enum: ["Yes"]
+                region:
+                  title: Region
+                  type: string
+                  description: Select the cloud region
+                  enum: [US, JP, EU]
+                projectName:
+                  title: Project Name
+                  type: string
+                  description: The name of the Projet to be migrated
+                environment:
+                  title: Migration Environment
+                  type: string
+                  description: Select the source and target environment for the migration
+                  ui:widget: radio
+                  enum: [Dev to Test, Test to Prod]
+                performS3Migration:
+                  title: Do you want to migrate Server Side Components?
+                  type: string
+                  description: Select 'Yes' to include the Server Side Components in the migration.
+                  ui:widget: radio
+                  enum: ["No","Yes"]
+                migrationType:
+                  title: Migration Type
+                  type: string
+                  description: Choose whether to migrate the entire project or only specific assets.
+                  ui:widget: radio
+                  default: Full Migration
+                  enum: [Full Migration, Selective Migration]
         migrationType:
           oneOf:
             - properties:
                 migrationType:
-                  enum:
-                    - Full Migration
+                  enum: [Full Migration]
             - properties:
                 migrationType:
-                  enum:
-                    - Selective Migration
+                  enum: [Selective Migration]
                 selectiveAssets:
                   title: Selective Assets
                   type: array
